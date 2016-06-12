@@ -55,7 +55,7 @@ paths:
           schema:
             $ref: '#/definitions/RegisterStatus'
           examples: {
-            "application/json": "{\n \"code\": 1,\n  \"message\": \"Registration OK\" \n}"
+            "application/json": "{\n \"code\": 1,\n  \"message\": \"Registration OK\", \"userId\": 123456 \n}"
           }
         400:
           description: error
@@ -64,6 +64,26 @@ paths:
           examples: {
             "application/json": "{\n \"code\": 2,\n  \"message\": \"Invalid phone number\" \n}"
           }
+  /bookings:
+    get:
+      description: Get all active bookings for current user
+      operationId: getBookings
+      parameters:
+        - name: userId
+          in: query
+          type: integer
+          format: int64
+          description: user id from registration
+          required: true
+      responses:
+        200:
+          description: bookings list
+          schema:
+            $ref: '#/definitions/Bookings'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Status'
   /stages:
     get:
       description: Get possible guest stage values (checked in, traveling to hotel etc.)
@@ -209,6 +229,35 @@ definitions:
         items:
           type: string
           enum: [ "anonymous", "not_booked", "booked", "checked_in"]
+  Bookings:
+    required:
+      - bookings
+    properties:
+      bookings:
+        type: array
+        items:
+          $ref: "#/definitions/Booking"
+  Booking:
+    required:
+      - bookingId
+      - hotel
+      - startDate
+      - endDate
+    properties:
+      bookingId:
+        type: string
+        description: Booking id
+      startDate:
+        type: integer
+        format: int64
+        description: unix timestamp
+      endDate:
+        type: integer
+        format: int64
+        description: unix timestamp
+      hotel:
+        type: string
+        description: hotel code
   BulkData:
     type: "object"
     required:
@@ -256,9 +305,14 @@ definitions:
         type: string
   RegisterStatus:
     required:
+      - userId
       - code
       - message
     properties:
+      userId:
+        type: integer
+        description: user profile id
+        format: int64
       code:
         type: integer
         description: |
