@@ -13,26 +13,30 @@ host: myadmin.mystay.cz
 basePath: /api/user/v1
 schemes:
   - https
-consumes:
-  - application/json
 produces:
   - application/json
 paths:
   /register/pin:
     post:
+      consumes:
+      - '*/*'
       description: link mobile device with user profile using single-use pin code, the profile has to be already present on backend
       parameters:
         - name: pin
           in: formData
           type: string
           description: PIN code from SMS or Email
+        - name: deviceId
+          in: formData
+          type: string
+          description: Device id
       responses:
         200:
           description: registration success
           schema:
             $ref: '#/definitions/RegisterStatus'
           examples: {
-            "application/json": "{\n \"code\": 1,\n  \"message\": \"Registration OK\" \n}"
+            "application/json": "{\n \"code\": 1,\n  \"message\": \"Registration OK\", \"clientId\": 589503 \n}"
           }
         400:
           description: User profile not found
@@ -43,19 +47,23 @@ paths:
           }
   /register/phone:
     post:
-      description: link mobile device with user profile using phone numer, the profile has to be already present on backend
+      description: link mobile device with user profile using phone number, the profile has to be already present on backend
       parameters:
-        - name: number
+        - name: phone
           in: formData
           type: string
           description: Mobile phone number
+        - name: deviceId
+          in: formData
+          type: string
+          description: Device id
       responses:
         200:
           description: registration result
           schema:
             $ref: '#/definitions/RegisterStatus'
           examples: {
-            "application/json": "{\n \"code\": 1,\n  \"message\": \"Registration OK\", \"userId\": 123456 \n}"
+            "application/json": "{\n \"code\": 1,\n  \"message\": \"Registration OK\", \"clientId\": 123456 \n}"
           }
         400:
           description: error
@@ -69,7 +77,7 @@ paths:
       description: Get all active bookings for current user
       operationId: getBookings
       parameters:
-        - name: userId
+        - name: clientId
           in: query
           type: integer
           format: int64
@@ -174,6 +182,22 @@ paths:
       description: Save rating screen result
       operationId: saveRating
       parameters:
+        - name: clientId
+          in: query
+          type: integer
+          format: int64
+          required: false
+          description: user id from registration
+        - name: deviceId
+          in: formData
+          type: string
+          required: true
+          description: Device id
+        - name: question
+          in: formData
+          required: false
+          type: string
+          description: rating question
         - name: rating
           in: formData
           required: true
@@ -185,6 +209,16 @@ paths:
           required: false
           type: string
           description: user feedback
+        - name: hotel
+          in: formData
+          required: true
+          type: string
+          description: hotel code
+        - name: lng
+          in: formData
+          required: false
+          type: string
+          description: language code
       responses:
         200:
           description: checkin response
@@ -305,11 +339,11 @@ definitions:
         type: string
   RegisterStatus:
     required:
-      - userId
+      - clientId
       - code
       - message
     properties:
-      userId:
+      clientId:
         type: integer
         description: user profile id
         format: int64
@@ -325,10 +359,10 @@ definitions:
         type: string
   UserProfile:
     required:
-      - userId
+      - clientId
       - properties
     properties:
-      userId:
+      clientId:
         type: integer
         description: user id
         format: int32
