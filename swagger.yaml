@@ -9,7 +9,7 @@ info:
     name: Denis Fiser
     email: denis.fiser@mystay.cz
     url: http://mystay.cz
-host: myadmin.mystay.cz
+host: myadmin.dev.mystay.cz
 basePath: /api/user/v1
 schemes:
   - https
