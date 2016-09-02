@@ -36,7 +36,7 @@ paths:
           schema:
             $ref: '#/definitions/RegisterStatus'
           examples: {
-            "application/json": "{\n \"code\": 1,\n  \"message\": \"Registration OK\", \"clientId\": 589503 \n}"
+            "application/json": "{\n \"code\": 1,\n  \"message\": \"Registration OK\", \"userId\": 589503 \n}"
           }
         400:
           description: User profile not found
@@ -63,7 +63,7 @@ paths:
           schema:
             $ref: '#/definitions/RegisterStatus'
           examples: {
-            "application/json": "{\n \"code\": 1,\n  \"message\": \"Registration OK\", \"clientId\": 123456 \n}"
+            "application/json": "{\n \"code\": 1,\n  \"message\": \"Registration OK\", \"userId\": 123456 \n}"
           }
         400:
           description: error
@@ -339,11 +339,11 @@ definitions:
         type: string
   RegisterStatus:
     required:
-      - clientId
+      - userId
       - code
       - message
     properties:
-      clientId:
+      userId:
         type: integer
         description: user profile id
         format: int64
@@ -359,10 +359,10 @@ definitions:
         type: string
   UserProfile:
     required:
-      - clientId
+      - userId
       - properties
     properties:
-      clientId:
+      userId:
         type: integer
         description: user id
         format: int32
