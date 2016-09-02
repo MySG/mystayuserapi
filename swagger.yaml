@@ -77,7 +77,7 @@ paths:
       description: Get all active bookings for current user
       operationId: getBookings
       parameters:
-        - name: clientId
+        - name: userId
           in: query
           type: integer
           format: int64
@@ -182,7 +182,7 @@ paths:
       description: Save rating screen result
       operationId: saveRating
       parameters:
-        - name: clientId
+        - name: userId
           in: query
           type: integer
           format: int64
@@ -298,7 +298,7 @@ definitions:
       - data
       - deviceId
     properties:
-      clientId:
+      userId:
         type: string
       deviceId:
         type: string
@@ -320,7 +320,7 @@ definitions:
         type: string
       stage:
         type: string
-      clientId:
+      userId:
         type: string
       deviceId:
         type: string
